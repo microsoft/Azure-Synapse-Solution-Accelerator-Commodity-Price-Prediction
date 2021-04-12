@@ -69,7 +69,7 @@ In order to send mails when anomalies are found we need to create a Logic App.
 2. Once the Logic App is created, go to the resource and select the Logic Apps Designer
 3. Pick the trigger "When a HTTP request is received"
 4. Paste the JSON schema below in the Request Body JSON Schema and choose POST for the method
-```JSON
+```
 	{
 	    "properties": {
 	        "dfName": {

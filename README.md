@@ -1,4 +1,4 @@
-![Commodity Price Prediction Solution Accelerator](./Resource_Deployment\img\CommodityPRicePrediction.png)
+![Commodity Price Prediction Solution Accelerator](./Resource_Deployment/img/CommodityPRicePrediction.png)
 ## About this Repository 
 This accelerator was built to provide developers with all of the resources needed to build a solution to forecast prices of commodities and identify anomalies in the time-series data using Azure Synapse Analytics, Azure Machine Learning and Azure Cognitive Services.
 

@@ -1,0 +1,127 @@
+{
+    "name": "Generate Forecast Pipeline",
+    "properties": {
+        "activities": [
+            {
+                "name": "Forecast",
+                "type": "SynapseNotebook",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "notebook": {
+                        "referenceName": "04_GenerateForecastData",
+                        "type": "NotebookReference"
+                    },
+                    "parameters": {
+                        "table_name": {
+                            "value": "default.forecast",
+                            "type": "string"
+                        },
+                        "start_date": {
+                            "value": "2020-01-01",
+                            "type": "string"
+                        },
+                        "end_date": {
+                            "value": "2021-01-01",
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "Score",
+                "type": "SynapseNotebook",
+                "dependsOn": [
+                    {
+                        "activity": "Forecast",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "notebook": {
+                        "referenceName": "02_Scoring",
+                        "type": "NotebookReference"
+                    },
+                    "parameters": {
+                        "table_input": {
+                            "value": "default.forecast",
+                            "type": "string"
+                        },
+                        "scored_data": {
+                            "value": "Forecast",
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "Copy to SQL pool",
+                "type": "Copy",
+                "dependsOn": [
+                    {
+                        "activity": "Score",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "source": {
+                        "type": "ParquetSource",
+                        "storeSettings": {
+                            "type": "AzureBlobFSReadSettings",
+                            "recursive": true,
+                            "wildcardFileName": "*",
+                            "enablePartitionDiscovery": false
+                        }
+                    },
+                    "sink": {
+                        "type": "SqlDWSink",
+                        "preCopyScript": "truncate table forecast",
+                        "allowCopyCommand": true,
+                        "disableMetricsCollection": false
+                    },
+                    "enableStaging": false
+                },
+                "inputs": [
+                    {
+                        "referenceName": "Scored",
+                        "type": "DatasetReference"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "referenceName": "ForecastTable",
+                        "type": "DatasetReference"
+                    }
+                ]
+            }
+        ],
+        "annotations": []
+    }
+}

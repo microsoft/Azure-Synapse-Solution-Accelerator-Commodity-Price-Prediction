@@ -1,0 +1,38 @@
+{
+    "name": "CopyAndFilter_DF",
+    "properties": {
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "PII_CommodityLocal",
+                        "type": "DatasetReference"
+                    },
+                    "name": "SourceDataset"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "CommodityData",
+                        "type": "DatasetReference"
+                    },
+                    "name": "OutputDataset"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "Filter1"
+                },
+                {
+                    "name": "DerivedColumn1"
+                },
+                {
+                    "name": "Aggregate1"
+                }
+            ],
+            "script": "source(output(\n\t\titem_code as string,\n\t\tgroup_code as string,\n\t\tseries_id as string,\n\t\tyear as integer,\n\t\tperiod as string,\n\t\tvalue as float,\n\t\tfootnote_codes as string,\n\t\tseasonal as string,\n\t\tseries_title as string,\n\t\tgroup_name as string,\n\t\titem_name as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tformat: 'parquet',\n\twildcardPaths:['Source']) ~> SourceDataset\nSourceDataset filter(group_name=='Metals and metal products' && item_name == 'Crude petroleum (domestic production)' && period != 'M13') ~> Filter1\nFilter1 derive(Month = replace(period,\"M\",\"\"),\n\t\tDate = toDate(concat(\"01\",replace(period,\"M\",\"\"),toString(year)),'ddMMyyyy')) ~> DerivedColumn1\nDerivedColumn1 aggregate(groupBy(Date),\n\taverage_value = avg(value)) ~> Aggregate1\nAggregate1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tformat: 'parquet',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> OutputDataset"
+        }
+    }
+}

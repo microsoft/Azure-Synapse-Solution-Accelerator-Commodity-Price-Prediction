@@ -1,14 +1,33 @@
-# Project
+![Commodity Price Prediction Solution Accelerator](./Resource_Deployment\img\CommodityPRicePrediction.png)
+## About this Repository 
+This accelerator was built to provide developers with all of the resources needed to build a solution to forecast prices of commodities and identify anomalies in the time-series data using Azure Synapse Analytics, Azure Machine Learning and Azure Cognitive Services.
 
-> This repo has been populated by an initial template to help get you started. Please
-> make sure to update the content to build a great experience for community-building.
 
-As the maintainer of this project, please make a few updates:
+## Prerequisites
+In order to successfully complete this solution accelerator, you will need to have access to and/or provisioned the following: 
+1. Azure Subscription 
+2. Azure Storage Explorer
 
-- Improving this README.MD file to provide a great experience
-- Updating SUPPORT.MD with content about this project's support experience
-- Understanding the security reporting process in SECURITY.MD
-- Remove this section from the README
+## Azure Analytics Platforms 
+The directions provided for this solution assume fundamental working knowledge of Azure, Azure Cognitive Services, Azure Machine Learning and Power BI. 
+1. [Azure Synapse Analytics](https://azure.microsoft.com/en-us/services/synapse-analytics/)
+2. [Azure Cognitive Services](https://azure.microsoft.com/en-us/services/cognitive-services/)
+3. [Azure Machine Learning Services](https://azure.microsoft.com/en-us/services/machine-learning/)
+4. [Power BI](https://docs.microsoft.com/en-us/power-bi/)
+
+## Getting Started and Process Overview 
+1. Clone the repository and navigate to the root of the directory 
+2. Go to [Deployment Guide](./Resource_Deployment/ResourceDeployment.md)
+The architecture diagram below details what you will be building for this Solution Accelerator. 
+
+![Architecture Diagram](./Resource_Deployment/img/ArchitectureReference.png)
+
+
+## 0 - Resource Deployment 
+The resources in this folder can be used to deploy the required resources into your Azure Subscription. You can do this in the Azure Portal. 
+
+## 1 - Analytics Deployment
+This folder contains the Notebooks needed to complete this solution accelerator. Once you have deployed all the required resources from [ResourceDeployment.md](./Resource_Deployment/ResourceDeployment.md). Run through the Notebooks following the instructions in [Resource Deployment](./Resource_Deployment/README.md). 
 
 ## Contributing
 

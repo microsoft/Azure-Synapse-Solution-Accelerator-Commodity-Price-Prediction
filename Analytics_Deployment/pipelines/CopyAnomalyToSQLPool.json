@@ -1,0 +1,32 @@
+{
+    "name": "Copy Anomalies To SQL Pool",
+    "properties": {
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "Anomalies",
+                        "type": "DatasetReference"
+                    },
+                    "name": "source1"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "AnomaliesTable",
+                        "type": "DatasetReference"
+                    },
+                    "name": "sink1"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "DerivedColumn1"
+                }
+            ],
+            "script": "source(output(\n\t\tdate as string,\n\t\taverage_value as double,\n\t\tisAnomaly as boolean,\n\t\tisPositiveAnomaly as boolean,\n\t\tisNegativeAnomaly as boolean,\n\t\tperiod as integer,\n\t\texpectedValue as double,\n\t\tupperMargin as double,\n\t\tlowerMargin as double,\n\t\tupperValue as double,\n\t\tlowerValue as double\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tformat: 'parquet') ~> source1\nsource1 derive(date = toDate(date),\n\t\tisAnomaly = toString(isAnomaly),\n\t\tisPositiveAnomaly = toString(isPositiveAnomaly),\n\t\tisNegativeAnomaly = toString(isNegativeAnomaly)) ~> DerivedColumn1\nDerivedColumn1 sink(input(\n\t\tDate as date,\n\t\tAverage_Value as double,\n\t\tisAnomaly as string,\n\t\tisPositiveAnomaly as string,\n\t\tisNegativeAnomaly as string,\n\t\tperiod as integer,\n\t\texpectedValue as double,\n\t\tupperMargin as double,\n\t\tlowerMargin as double\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+        }
+    }
+}
